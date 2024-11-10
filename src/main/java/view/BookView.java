@@ -50,6 +50,14 @@ public class BookView {
         primaryStage.show();
     }
 
+    public TextField getAuthorTextField() {
+        return authorTextField;
+    }
+
+    public TextField getTitleTextField() {
+        return titleTextField;
+    }
+
     private void initSaveOptions(GridPane gridPane) {
 
         titleLabel=new Label("Title");

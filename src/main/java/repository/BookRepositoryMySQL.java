@@ -3,10 +3,7 @@ package repository;
 import model.Book;
 import model.builder.BookBuilder;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -55,7 +52,7 @@ public class BookRepositoryMySQL implements BookRepository{
     public Optional<Book> findById(Long id) {
 
         Optional<Book> book=Optional.empty();
-        String sql= "SEECT * FROM book WHERE id="+ id +";";
+        String sql= "SElECT * FROM book WHERE id="+ id +";";
 
         try
         {
@@ -75,33 +72,46 @@ public class BookRepositoryMySQL implements BookRepository{
 
     @Override
     public boolean save(Book book) {
-        String newSql = "INSERT INTO book VALUES(null, \'" + book.getAuthor() +"\', \'" + book.getTitle()+"\', \'" + book.getPublishedDate() + "\' );";
+        //String newSql = "INSERT INTO book VALUES(null, \'" + book.getAuthor() +"\', \'" + book.getTitle()+"\', \'" + book.getPublishedDate() + "\' );";
 
+        //pt a preveni atacurile SQL Injection
+        String newSql = "INSERT INTO book VALUES(null, ?, ?, ?);";
 
         try{
-            Statement statement=connection.createStatement();
-             statement.executeUpdate(newSql);
+            PreparedStatement preparedStatement = connection.prepareStatement(newSql);
+            preparedStatement.setString(1, book.getAuthor());
+            preparedStatement.setString(2, book.getTitle());
+            preparedStatement.setDate(3, java.sql.Date.valueOf(book.getPublishedDate()));
+
+            int rowsInserted = preparedStatement.executeUpdate();
+
+            return (rowsInserted != 1) ? false : true;
+
         } catch (SQLException e){
             e.printStackTrace();
             return false;
         }
-        return true;
     }
 
     @Override
     public boolean delete(Book book) {
-        String newSql = "DELETE FROM book WHERE author=\'" + book.getAuthor() +"\' AND title=\'" + book.getTitle()+"\';";
 
+
+        String newSql = "DELETE FROM book WHERE author = ? AND title = ?";
 
         try{
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(newSql);
+
+            PreparedStatement statement = connection.prepareStatement(newSql);
+            statement.setString(1,book.getAuthor());
+            statement.setString(2,book.getTitle());
+
+            int rowsAffected=statement.executeUpdate();
+            return rowsAffected>0;
 
         } catch (SQLException e){
             e.printStackTrace();
             return false;
         }
-        return true;
     }
 
     @Override
