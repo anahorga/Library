@@ -65,6 +65,8 @@ public class BookController {
                 {
                     bookView.addDisplayAlertMessage("Save successful","Added book","Book was successfully added to the database");
                     bookView.addBookToObservableList(bookDTO);
+                    bookView.getTitleTextField().setText("");
+                    bookView.getAuthorTextField().setText("");
                 }
                 else
                 {
