@@ -26,6 +26,16 @@ public class BookBuilder {
         book.setTitle(title);
         return this;
     }
+    public BookBuilder setPrice(float price)
+    {
+        book.setPrice(price);
+        return this;
+    }
+    public BookBuilder setStock(int stock)
+    {
+        book.setStock(stock);
+        return this;
+    }
     public BookBuilder setPublishedDate(LocalDate date)
     {
         book.setPublishedDate(date);

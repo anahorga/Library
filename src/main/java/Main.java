@@ -1,10 +1,12 @@
 import database.DatabaseConnectionFactory;
 import model.Book;
 import model.builder.BookBuilder;
-import repository.BookRepository;
-import repository.BookRepositoryMySQL;
-import service.BookService;
-import service.BookServiceImpl;
+import repository.book.BookRepository;
+import repository.book.BookRepositoryCacheDecorator;
+import repository.book.BookRepositoryMySQL;
+import repository.book.Cache;
+import service.book.BookService;
+import service.book.BookServiceImpl;
 
 import java.sql.Connection;
 import java.time.LocalDate;
@@ -25,6 +27,8 @@ public class Main {
                 .setAuthor("Liviu Rebreanu")
                 .setTitle("Ion")
                 .setPublishedDate( LocalDate.of(1919,10,20))
+                .setStock(3)
+                .setPrice(123)
                 .build();
         //System.out.println(book);
 //
@@ -42,21 +46,21 @@ public class Main {
 //         bookRepo.deleteAll();
 //        System.out.println(bookRepo.findAll());
 
-        Connection connection= DatabaseConnectionFactory.getConnectionWrapper(false).getConnection();
-        BookRepository bookRepository=new BookRepositoryMySQL(connection);
-         BookService bookService=new BookServiceImpl(bookRepository);
+        Connection connection= DatabaseConnectionFactory.getConnectionWrapper(true).getConnection();
+        BookRepository bookRepository=new BookRepositoryCacheDecorator(new BookRepositoryMySQL(connection),new Cache<>());
 
-        bookRepository.deleteAll();
 
+
+        BookService bookService=new BookServiceImpl(bookRepository);
         bookService.save(book);
         System.out.println(bookService.findAll());
-        bookService.save(book2);
-        System.out.println(bookService.findAll());
 
-        bookService.delete(book);
-
-        bookService.save(book);
         System.out.println(bookService.findAll());
+//
+//        bookService.delete(book);
+//
+//        bookService.save(book);
+//        System.out.println(bookService.findAll());
 
 
 

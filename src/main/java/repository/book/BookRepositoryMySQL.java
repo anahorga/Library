@@ -1,4 +1,4 @@
-package repository;
+package repository.book;
 
 import model.Book;
 import model.builder.BookBuilder;
@@ -75,7 +75,7 @@ public class BookRepositoryMySQL implements BookRepository{
         //String newSql = "INSERT INTO book VALUES(null, \'" + book.getAuthor() +"\', \'" + book.getTitle()+"\', \'" + book.getPublishedDate() + "\' );";
 
         //pt a preveni atacurile SQL Injection
-        String newSql = "INSERT INTO book VALUES(null, ?, ?, ?);";
+        String newSql = "INSERT INTO book (author, title, publishedDate, stock, price) VALUES (?, ?, ?, ?, ?);";
 
         try{
             PreparedStatement preparedStatement = connection.prepareStatement(newSql);
@@ -83,6 +83,8 @@ public class BookRepositoryMySQL implements BookRepository{
             preparedStatement.setString(2, book.getTitle());
             preparedStatement.setDate(3, java.sql.Date.valueOf(book.getPublishedDate()));
 
+            preparedStatement.setInt(4, book.getStock());
+            preparedStatement.setFloat(5, book.getPrice());
             int rowsInserted = preparedStatement.executeUpdate();
 
             return (rowsInserted != 1) ? false : true;
