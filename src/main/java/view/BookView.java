@@ -31,13 +31,15 @@ public class BookView {
 
     private Button saveButton;
     private Button deleteButton;
+    private Button logOutButton;
+    private final Scene scene;
     public BookView(Stage primaryStage, List<BookDTO> books) {
 
         primaryStage.setTitle("Library");
         GridPane gridPane=new GridPane();
         initializedGridPane(gridPane);
 
-        Scene scene=new Scene(gridPane,720,480);
+         scene=new Scene(gridPane,720,480);
         primaryStage.setScene(scene);
 
         //nu avem voie sa facem alta atribuire
@@ -78,6 +80,9 @@ public class BookView {
         deleteButton=new Button("Delete");
         gridPane.add(deleteButton,6,1);
 
+        logOutButton=new Button("LogOut");
+        gridPane.add(logOutButton,7,1);
+
     }
 
     private void initTableView(GridPane gridPane) {
@@ -117,6 +122,10 @@ public class BookView {
     {
         deleteButton.setOnAction(deleteButtonListener);
     }
+    public void addLogOutButtonListener(EventHandler<ActionEvent> logOutButtonListener)
+    {
+        logOutButton.setOnAction(logOutButtonListener);
+    }
   public void addDisplayAlertMessage(String title,String header, String content)
   {
       Alert alert=new Alert(Alert.AlertType.INFORMATION);
@@ -149,5 +158,9 @@ public class BookView {
     public TableView getBookTableView()
     {
         return bookTableView;
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 }

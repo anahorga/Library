@@ -40,10 +40,15 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         boolean userValid = userValidator.validate();
         Notification<Boolean> userRegisterNotification = new Notification<>();
 
-        if (!userValid){
+        if (!userValid ){
             userValidator.getErrors().forEach(userRegisterNotification::addError);
             userRegisterNotification.setResult(Boolean.FALSE);
-        } else {
+        }
+        else if (userRepository.existsByUsername(username))
+        {
+            userRegisterNotification.addError("Username already exists! Please try another one.");
+        }
+            else {
             user.setPassword(hashPassword(password));
             userRegisterNotification.setResult(userRepository.save(user));
         }
