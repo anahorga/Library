@@ -28,20 +28,20 @@ public class LoginComponentFactory {
      private final UserRepository userRepository;
 
      private final RightsRolesRepository rightsRolesRepository;
-     private final BookRepository bookRepository;
-     private final BookService bookService;
      private static Stage stage;
      private static Boolean componentsForTest;
 
 
     private static volatile LoginComponentFactory instance;
 
-    public static LoginComponentFactory getInstance(Boolean componentsForTest, Stage primaryStage){
+    public static LoginComponentFactory getInstance(Boolean aComponentsForTest, Stage aStage){
 
         if (instance == null) {
             synchronized(LoginComponentFactory.class) {
                 if (instance == null) {
-                    instance = new LoginComponentFactory(componentsForTest, primaryStage);
+                    stage=aStage;
+                    componentsForTest=aComponentsForTest;
+                    instance = new LoginComponentFactory(componentsForTest, stage);
                 }
             }
         }
@@ -56,11 +56,6 @@ public class LoginComponentFactory {
          this.authenticationService=new AuthenticationServiceImpl(userRepository,rightsRolesRepository);
          this.loginView=new LoginView(primaryStage);
          this.loginController=new LoginController(loginView,authenticationService);
-         this.bookRepository=new BookRepositoryMySQL(connection);
-         this.bookService=new BookServiceImpl(bookRepository);
-         this.stage=primaryStage;
-         this.componentsForTest=componentsForTest;
-
 
     }
 
@@ -82,16 +77,6 @@ public class LoginComponentFactory {
     {
         return loginView;
 
-    }
-
-    public BookRepository getBookRepository()
-    {
-        return bookRepository;
-    }
-
-    public BookService getBookService()
-    {
-        return bookService;
     }
     public LoginController getLoginController()
     {

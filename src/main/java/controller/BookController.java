@@ -2,6 +2,9 @@ package controller;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.stage.Stage;
+import launcher.CustomerComponentFactory;
+import launcher.LoginComponentFactory;
 import mapper.BookMapper;
 import service.book.BookService;
 import view.BookView;
@@ -20,6 +23,7 @@ public class BookController {
 
         this.bookView.addSaveButtonListener(new SaveButtonListener());
         this.bookView.addDeleteButtonListener(new DeleteButtonListener());
+        this.bookView.addLogOutButtonListener(new LogOutButtonListener());
     }
 
     private class DeleteButtonListener implements EventHandler<ActionEvent>
@@ -73,6 +77,25 @@ public class BookController {
                     bookView.addDisplayAlertMessage("Save error","Problem at adding Book to","There was a problem at adding the book to the database. Please try again.");
                 }
             }
+
+        }
+    }
+    private class LogOutButtonListener implements EventHandler<ActionEvent>
+    {
+
+        @Override
+        public void handle(ActionEvent event) {
+
+            //trebe implementat si logica din spate din service (logout din AuthenticationServiceImpl)
+
+            bookView.addDisplayAlertMessage(
+                    "Logout successful",
+                    "You have been logged out",
+                    "Redirecting to login screen..."
+            );
+
+            LoginComponentFactory.getStage().setScene(LoginComponentFactory.getInstance(CustomerComponentFactory.getComponentsForTest(),CustomerComponentFactory.getStage())
+                    .getLoginView().getScene());
 
         }
     }

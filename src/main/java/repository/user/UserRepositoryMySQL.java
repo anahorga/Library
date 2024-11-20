@@ -129,12 +129,12 @@ public class UserRepositoryMySQL implements UserRepository {
     @Override
     public boolean existsByUsername(String email) {
 
-        String fetchUserSql ="Select * from user where username =? ";
+        String fetchUserSql ="Select * from user where username = ?";
 
         try {
             PreparedStatement preparedStatement = connection.prepareStatement(fetchUserSql);
             preparedStatement.setString(1,email);
-            ResultSet userResultSet = preparedStatement.executeQuery(fetchUserSql);
+            ResultSet userResultSet = preparedStatement.executeQuery();
             return userResultSet.next();
 
         } catch (SQLException e) {
