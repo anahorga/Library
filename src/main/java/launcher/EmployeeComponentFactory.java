@@ -14,31 +14,31 @@ import view.model.BookDTO;
 import java.sql.Connection;
 import java.util.List;
 
-public class CustomerComponentFactory {
+public class EmployeeComponentFactory {
 
     private final BookView bookView;
     private final BookController bookController;
     private final BookRepository bookRepository;
     private final BookService bookService;
-    private static volatile CustomerComponentFactory instance;
+    private static volatile EmployeeComponentFactory instance;
     private static Stage stage;
     private static Boolean componentsForTest;
 
-    public static CustomerComponentFactory getInstance(Boolean aComponentsForTest, Stage aPrimaryStage){
+    public static EmployeeComponentFactory getInstance(Boolean aComponentsForTest, Stage aPrimaryStage){
 
         if (instance == null) {
-            synchronized(CustomerComponentFactory.class) {
+            synchronized(EmployeeComponentFactory.class) {
                 if (instance == null) {
                     stage=aPrimaryStage;
                     componentsForTest=aComponentsForTest;
-                    instance = new CustomerComponentFactory(componentsForTest, stage);
+                    instance = new EmployeeComponentFactory(componentsForTest, stage);
                 }
             }
         }
         return instance;
     }
 
-    private CustomerComponentFactory(Boolean componentsForTest, Stage primaryStage)
+    private EmployeeComponentFactory(Boolean componentsForTest, Stage primaryStage)
     {
         Connection connection= DatabaseConnectionFactory.getConnectionWrapper(componentsForTest).getConnection();
         this.bookRepository= new BookRepositoryMySQL(connection);

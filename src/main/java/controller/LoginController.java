@@ -2,7 +2,7 @@ package controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 //import launcher.EmployeeComponentFactory;
-import launcher.CustomerComponentFactory;
+import launcher.EmployeeComponentFactory;
 import launcher.LoginComponentFactory;
 import model.User;
 import model.validation.Notification;
@@ -36,8 +36,8 @@ public class LoginController {
                 loginView.setActionTargetText(loginNotification.getFormattedErrors());
             }else{
                 loginView.setActionTargetText("LogIn Successfull!");
-                CustomerComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage());
-                CustomerComponentFactory.getStage().setScene(CustomerComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage())
+                EmployeeComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage());
+                EmployeeComponentFactory.getStage().setScene(EmployeeComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage())
                         .getBookView().getScene());
 
                 loginView.setActionTargetText("");

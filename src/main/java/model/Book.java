@@ -7,7 +7,7 @@ public class Book {
     private String title;
     private String author;
 
-    private float price;
+    private int price;
     private int stock;
 
 
@@ -45,11 +45,11 @@ public class Book {
         this.publishedDate = publishedDate;
     }
 
-    public float getPrice() {
+    public int getPrice() {
         return price;
     }
 
-    public void setPrice(float price) {
+    public void setPrice(int price) {
         this.price = price;
     }
 
