@@ -35,7 +35,7 @@ public class BookRepositoryCacheDecorator extends BookRepositoryDecorator{
     }
 
     @Override
-    public boolean save(Book book) {
+    public int save(Book book) {
         cache.invalidateCache();
         return decoratedBookRepository.save(book);
     }
@@ -50,5 +50,11 @@ public class BookRepositoryCacheDecorator extends BookRepositoryDecorator{
     public void deleteAll() {
             cache.invalidateCache();
             decoratedBookRepository.deleteAll();
+    }
+
+    @Override
+    public boolean sell(Book book) {
+        cache.invalidateCache();
+        return decoratedBookRepository.sell(book);
     }
 }

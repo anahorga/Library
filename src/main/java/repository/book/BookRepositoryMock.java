@@ -26,8 +26,10 @@ public class BookRepositoryMock implements BookRepository {
     }
 
     @Override
-    public boolean save(Book book) {
-        return books.add(book);
+    public int save(Book book) {
+
+        books.add(book);
+        return 1;
     }
 
     @Override
@@ -38,5 +40,10 @@ public class BookRepositoryMock implements BookRepository {
     @Override
     public void deleteAll() {
         books.clear();
+    }
+
+    @Override
+    public boolean sell(Book book) {
+        return false;
     }
 }
