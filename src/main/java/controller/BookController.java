@@ -23,6 +23,39 @@ public class BookController {
         this.bookView.addSaveButtonListener(new SaveButtonListener());
         this.bookView.addDeleteButtonListener(new DeleteButtonListener());
         this.bookView.addLogOutButtonListener(new LogOutButtonListener());
+        this.bookView.addSellButtonListener(new SellButtonListener());
+    }
+    private class SellButtonListener implements EventHandler<ActionEvent>
+    {
+        @Override
+        public void handle(ActionEvent event) {
+
+            BookDTO bookDTO=(BookDTO)bookView.getBookTableView().getSelectionModel().getSelectedItem();
+            if(bookDTO!=null) {
+                //aici verific si daca am destul stock
+
+                if (bookDTO.getStock() == 0) {
+                    bookView.addDisplayAlertMessage("Sell error", "Problem at selling the book", "There book is out of stock. Thank you for understanding!");
+                } else {
+                    boolean sellSuccessful = bookService.sell(BookMapper.convertBookDTOToBook(bookDTO));
+                    if (sellSuccessful) {
+                        bookDTO.setStock(bookDTO.getStock()-1);
+                         bookView.addDisplayAlertMessage("Sell successful","Book sold","Book was successfully sold");
+                        bookView.editObservableList(bookDTO);
+
+                    } else {
+                        bookView.addDisplayAlertMessage("Sell error","Problem at selling book","There was a problem with the database. Please try again");
+                    }
+                }
+
+
+            }
+            else {
+                bookView.addDisplayAlertMessage("Sell error","Problem at selling book","You must select a book before pressing the sell button");
+
+            }
+
+        }
     }
 
     private class DeleteButtonListener implements EventHandler<ActionEvent>
@@ -49,6 +82,18 @@ public class BookController {
 
         }
     }
+    public boolean isInteger(String input) {
+        if (input == null || input.isEmpty()) {
+            return false; // Șirul este gol sau null
+        }
+        try {
+            Integer.parseInt(input);
+            return true; // Conversia a reușit, este un int
+        } catch (NumberFormatException e) {
+            return false; // Conversia a eșuat, nu este un int
+        }
+    }
+
     private class SaveButtonListener implements EventHandler<ActionEvent>
     {
 
@@ -57,23 +102,36 @@ public class BookController {
 
             String title = bookView.getTitle();
             String author = bookView.getAuthor();
+            String stock = bookView.getStock();
+            String price = bookView.getPrice();
 
-            if(title.isEmpty()||author.isEmpty())
+            if(title.isEmpty()||author.isEmpty()||stock.isEmpty()||price.isEmpty())
             {
-                bookView.addDisplayAlertMessage("Save error","Problem at Author or Title fields","Can not have an empty Title or Author field");
-            }else {
-                BookDTO bookDTO=new BookDTOBuilder().setAuthor(author).setTitle(title).build();
-                boolean saveBook=bookService.save(BookMapper.convertBookDTOToBook(bookDTO));
-                if(saveBook)
+                bookView.addDisplayAlertMessage("Save error","Problem at book fields","Can not have an empty Title, Author, Stock or Price field");
+            }
+            else if(!isInteger(stock)||!isInteger(price))
+            {
+                bookView.addDisplayAlertMessage("Save error","Problem at Price and Stock fields","Price and Stock fields must numbers");
+
+            }
+            else {
+                BookDTO bookDTO=new BookDTOBuilder().setAuthor(author).setTitle(title)
+                        .setStock(Integer.parseInt(stock))
+                        .setPrice(Integer.parseInt(price)).build();
+                int saveBook=bookService.save(BookMapper.convertBookDTOToBook(bookDTO));
+                if(saveBook>0)
                 {
                     bookView.addDisplayAlertMessage("Save successful","Added book","Book was successfully added to the database");
+                    bookDTO.setId((long) saveBook);
                     bookView.addBookToObservableList(bookDTO);
                     bookView.getTitleTextField().setText("");
                     bookView.getAuthorTextField().setText("");
+                    bookView.getPriceTextField().setText("");
+                    bookView.getStockTextField().setText("");
                 }
                 else
                 {
-                    bookView.addDisplayAlertMessage("Save error","Problem at adding Book to","There was a problem at adding the book to the database. Please try again.");
+                    bookView.addDisplayAlertMessage("Save error","Problem at adding Book to the database","There was a problem at adding the book to the database. Please try again.");
                 }
             }
 

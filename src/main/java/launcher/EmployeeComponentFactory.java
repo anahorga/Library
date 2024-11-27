@@ -5,7 +5,9 @@ import database.DatabaseConnectionFactory;
 import javafx.stage.Stage;
 import mapper.BookMapper;
 import repository.book.BookRepository;
+import repository.book.BookRepositoryCacheDecorator;
 import repository.book.BookRepositoryMySQL;
+import repository.book.Cache;
 import service.book.BookService;
 import service.book.BookServiceImpl;
 import view.BookView;
@@ -41,7 +43,7 @@ public class EmployeeComponentFactory {
     private EmployeeComponentFactory(Boolean componentsForTest, Stage primaryStage)
     {
         Connection connection= DatabaseConnectionFactory.getConnectionWrapper(componentsForTest).getConnection();
-        this.bookRepository= new BookRepositoryMySQL(connection);
+        this.bookRepository= new BookRepositoryCacheDecorator(new BookRepositoryMySQL(connection), new Cache<>());
         this.bookService=new BookServiceImpl(bookRepository);
         List<BookDTO> bookDTOs= BookMapper.covertBookListToBookDTOList(bookService.findAll());
         this.bookView=new BookView(primaryStage,bookDTOs);

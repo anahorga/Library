@@ -13,11 +13,17 @@ public class BookMapper {
 
     public static BookDTO convertBookToBookDTO(Book book)
     {
-        return new BookDTOBuilder().setAuthor(book.getAuthor()).setTitle(book.getTitle()).build();
+        return new BookDTOBuilder().setId(book.getId()).setPrice(book.getPrice())
+                .setStock(book.getStock()).setAuthor(book.getAuthor()).
+                setTitle(book.getTitle()).build();
     }
     public static Book convertBookDTOToBook(BookDTO bookDTO)
     {
-        return new BookBuilder().setTitle(bookDTO.getTitle()).setAuthor(bookDTO.getAuthor()).setPublishedDate(LocalDate.of(2000,1,1)).build();
+        return new BookBuilder().setTitle(bookDTO.getTitle())
+                .setAuthor(bookDTO.getAuthor())
+                .setPublishedDate(LocalDate.of(2000,1,1))
+                .setStock(bookDTO.getStock()).setPrice(bookDTO.getPrice())
+                .setId(bookDTO.getId()).build();
     }
 
     public static List<BookDTO> covertBookListToBookDTOList(List<Book>books)

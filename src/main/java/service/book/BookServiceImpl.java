@@ -27,13 +27,17 @@ public class BookServiceImpl implements BookService{
     }
 
     @Override
-    public boolean save(Book book) {
+    public int save(Book book) {
         return bookRepository.save(book);
     }
 
     @Override
     public boolean delete(Book book) {
         return bookRepository.delete(book);
+    }
+    public boolean sell(Book book)
+    {
+        return bookRepository.sell(book);
     }
 
     @Override

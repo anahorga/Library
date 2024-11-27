@@ -25,13 +25,18 @@ public class BookView {
 
     private TextField authorTextField;
     private TextField titleTextField;
+    private TextField stockTextField;
+    private TextField priceTextField;
 
     private Label authorLabel;
     private Label titleLabel;
+    private Label stockLabel;
+    private Label priceLabel;
 
     private Button saveButton;
     private Button deleteButton;
     private Button logOutButton;
+    private Button sellButton;
     private final Scene scene;
     public BookView(Stage primaryStage, List<BookDTO> books) {
 
@@ -50,6 +55,14 @@ public class BookView {
         initSaveOptions(gridPane);
 
         primaryStage.show();
+    }
+
+    public TextField getStockTextField() {
+        return stockTextField;
+    }
+
+    public TextField getPriceTextField() {
+        return priceTextField;
     }
 
     public TextField getAuthorTextField() {
@@ -74,15 +87,29 @@ public class BookView {
         authorTextField=new TextField();
         gridPane.add(authorTextField,4,1);
 
+        stockLabel=new Label("Stock");
+        gridPane.add(stockLabel,1,2);
+
+        stockTextField=new TextField();
+        gridPane.add(stockTextField,2,2);
+
+        priceLabel=new Label("Price");
+        gridPane.add(priceLabel,3,2);
+
+        priceTextField=new TextField();
+        gridPane.add(priceTextField,4,2);
+
         saveButton=new Button("Save");
-        gridPane.add(saveButton,5,1);
+        gridPane.add(saveButton,5,2);
 
         deleteButton=new Button("Delete");
-        gridPane.add(deleteButton,6,1);
+        gridPane.add(deleteButton,6,2);
 
         logOutButton=new Button("LogOut");
-        gridPane.add(logOutButton,7,1);
+        gridPane.add(logOutButton,7,2);
 
+        sellButton=new Button("Sell Book");
+        gridPane.add(sellButton,8,2);
     }
 
     private void initTableView(GridPane gridPane) {
@@ -98,8 +125,17 @@ public class BookView {
         TableColumn<BookDTO,String> authorColumn=new TableColumn<BookDTO,String>("Author");
         authorColumn.setCellValueFactory(new PropertyValueFactory<>("author"));
 
+        TableColumn<BookDTO,Long> idColumn=new TableColumn<>("Id");
+        idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
 
-        bookTableView.getColumns().addAll(titleColumn,authorColumn);
+        TableColumn<BookDTO,Integer>stockColumn=new TableColumn<>("Stock");
+        stockColumn.setCellValueFactory(new PropertyValueFactory<>("stock"));
+
+        TableColumn<BookDTO,Integer>priceColumn=new TableColumn<>("Price");
+        priceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+
+
+        bookTableView.getColumns().addAll(idColumn,titleColumn,authorColumn,priceColumn,stockColumn);
 
         bookTableView.setItems(booksObservableList);
 
@@ -126,6 +162,10 @@ public class BookView {
     {
         logOutButton.setOnAction(logOutButtonListener);
     }
+    public void addSellButtonListener(EventHandler<ActionEvent> sellButtonListener)
+    {
+        sellButton.setOnAction(sellButtonListener);
+    }
   public void addDisplayAlertMessage(String title,String header, String content)
   {
       Alert alert=new Alert(Alert.AlertType.INFORMATION);
@@ -146,6 +186,15 @@ public class BookView {
         return authorTextField.getText();
     }
 
+    public String getStock()
+    {
+        return stockTextField.getText();
+    }
+    public String getPrice()
+    {
+        return priceTextField.getText();
+    }
+
     public void addBookToObservableList(BookDTO bookDTO)
     {
         this.booksObservableList.add(bookDTO);
@@ -155,6 +204,18 @@ public class BookView {
         this.booksObservableList.remove(bookDTO);
     }
 
+    public void editObservableList(BookDTO updatedBookDTO)
+    {
+        for (int i = 0; i < booksObservableList.size(); i++) {
+            BookDTO book = booksObservableList.get(i);
+            if (book.getId().equals(updatedBookDTO.getId())) {
+                book.setStock(updatedBookDTO.getStock());
+                booksObservableList.set(i, book);
+                break;
+            }
+        }
+
+    }
     public TableView getBookTableView()
     {
         return bookTableView;
@@ -163,4 +224,5 @@ public class BookView {
     public Scene getScene() {
         return scene;
     }
+
 }
