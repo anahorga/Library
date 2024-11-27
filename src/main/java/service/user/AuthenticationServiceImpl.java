@@ -30,7 +30,7 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
         User user = new UserBuilder()
                 .setUsername(username)
-                .setPassword(password)
+                .setPassword(password)//prim oara dau parola simpla pt a putea fi validata si apoi ii fac hash
                 .setRoles(Collections.singletonList(customerRole))//creeaza o lista imutabila si are o singura copie
                 .build();
 
@@ -61,6 +61,8 @@ public class AuthenticationServiceImpl implements AuthenticationService {
         return userRepository.findByUsernameAndPassword(username, hashPassword(password));
     }
 
+
+    //de implementat logout
     @Override
     public boolean logout(User user) {
         return false;

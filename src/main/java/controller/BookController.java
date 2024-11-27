@@ -2,8 +2,7 @@ package controller;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.stage.Stage;
-import launcher.CustomerComponentFactory;
+import launcher.EmployeeComponentFactory;
 import launcher.LoginComponentFactory;
 import mapper.BookMapper;
 import service.book.BookService;
@@ -94,7 +93,7 @@ public class BookController {
                     "Redirecting to login screen..."
             );
 
-            LoginComponentFactory.getStage().setScene(LoginComponentFactory.getInstance(CustomerComponentFactory.getComponentsForTest(),CustomerComponentFactory.getStage())
+            LoginComponentFactory.getStage().setScene(LoginComponentFactory.getInstance(EmployeeComponentFactory.getComponentsForTest(), EmployeeComponentFactory.getStage())
                     .getLoginView().getScene());
 
         }

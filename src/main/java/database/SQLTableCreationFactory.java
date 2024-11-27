@@ -1,11 +1,6 @@
 package database;
 
-import static database.Constants.Tables.BOOK;
-import static database.Constants.Tables.RIGHT;
-import static database.Constants.Tables.ROLE;
-import static database.Constants.Tables.ROLE_RIGHT;
-import static database.Constants.Tables.USER;
-import static database.Constants.Tables.USER_ROLE;
+import static database.Constants.Tables.*;
 
 public class SQLTableCreationFactory {
 
@@ -16,6 +11,8 @@ public class SQLTableCreationFactory {
                     "  author varchar(500) NOT NULL," +
                     "  title varchar(500) NOT NULL," +
                     "  publishedDate datetime DEFAULT NULL," +
+                    "  stock INT DEFAULT 0," +
+                    "  price INT DEFAULT 0," +
                     "  PRIMARY KEY (id)," +
                     "  UNIQUE KEY id_UNIQUE (id)" +
                     ") ENGINE=InnoDB AUTO_INCREMENT=0 DEFAULT CHARSET=utf8;";
@@ -72,6 +69,27 @@ public class SQLTableCreationFactory {
                     "  CONSTRAINT role_fkid" +
                     "    FOREIGN KEY (role_id)" +
                     "    REFERENCES role (id)" +
+                    "    ON DELETE CASCADE" +
+                    "    ON UPDATE CASCADE);";
+            case ORDER -> "  CREATE TABLE IF NOT EXISTS `order` (" +
+                    "  id INT NOT NULL AUTO_INCREMENT," +
+                    "  order_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP," +
+                    "  user_id INT NOT NULL," +
+                    "  book_id INT NOT NULL," +
+                    "  stock INT NOT NULL," +
+                    "  price INT NOT NULL," +
+                    "  PRIMARY KEY (id)," +
+                    "  UNIQUE INDEX id_UNIQUE (id ASC)," +
+                    "  INDEX user_id_idx (user_id ASC)," +
+                    "  INDEX book_id_idx (book_id ASC)," +
+                    "  CONSTRAINT fk_user_id" +
+                    "    FOREIGN KEY (user_id)" +
+                    "    REFERENCES user (id)" +
+                    "    ON DELETE CASCADE" +
+                    "    ON UPDATE CASCADE," +
+                    "  CONSTRAINT fk_book_id" +
+                    "    FOREIGN KEY (book_id)" +
+                    "    REFERENCES book (id)" +
                     "    ON DELETE CASCADE" +
                     "    ON UPDATE CASCADE);";
             default -> "";

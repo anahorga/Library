@@ -26,7 +26,7 @@ public class BookBuilder {
         book.setTitle(title);
         return this;
     }
-    public BookBuilder setPrice(float price)
+    public BookBuilder setPrice(int price)
     {
         book.setPrice(price);
         return this;
