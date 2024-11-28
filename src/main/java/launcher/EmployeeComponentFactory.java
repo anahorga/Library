@@ -4,12 +4,17 @@ import controller.BookController;
 import database.DatabaseConnectionFactory;
 import javafx.stage.Stage;
 import mapper.BookMapper;
+import model.User;
 import repository.book.BookRepository;
 import repository.book.BookRepositoryCacheDecorator;
 import repository.book.BookRepositoryMySQL;
 import repository.book.Cache;
+import repository.order.OrderRepository;
+import repository.order.OrderRepositoryMySQL;
 import service.book.BookService;
 import service.book.BookServiceImpl;
+import service.order.OrderService;
+import service.order.OrderServiceImpl;
 import view.BookView;
 import view.model.BookDTO;
 
@@ -22,9 +27,12 @@ public class EmployeeComponentFactory {
     private final BookController bookController;
     private final BookRepository bookRepository;
     private final BookService bookService;
+    private final OrderService orderService;
+    private final OrderRepository orderRepository;
     private static volatile EmployeeComponentFactory instance;
     private static Stage stage;
     private static Boolean componentsForTest;
+
 
     public static EmployeeComponentFactory getInstance(Boolean aComponentsForTest, Stage aPrimaryStage){
 
@@ -37,6 +45,7 @@ public class EmployeeComponentFactory {
                 }
             }
         }
+
         return instance;
     }
 
@@ -47,7 +56,10 @@ public class EmployeeComponentFactory {
         this.bookService=new BookServiceImpl(bookRepository);
         List<BookDTO> bookDTOs= BookMapper.covertBookListToBookDTOList(bookService.findAll());
         this.bookView=new BookView(primaryStage,bookDTOs);
-        this.bookController=new BookController(bookView,bookService);
+
+        this.orderRepository=new OrderRepositoryMySQL(connection);
+        this.orderService=new OrderServiceImpl(orderRepository);
+        this.bookController=new BookController(bookView,bookService,orderService);
 
     }
 

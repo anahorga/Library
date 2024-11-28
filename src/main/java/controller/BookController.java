@@ -5,7 +5,10 @@ import javafx.event.EventHandler;
 import launcher.EmployeeComponentFactory;
 import launcher.LoginComponentFactory;
 import mapper.BookMapper;
+import model.User;
+import model.builder.UserBuilder;
 import service.book.BookService;
+import service.order.OrderService;
 import view.BookView;
 import view.model.BookDTO;
 import view.model.builder.BookDTOBuilder;
@@ -14,12 +17,21 @@ public class BookController {
 
     private final BookView bookView;
     private final BookService bookService;
+    private User user;
 
-    public BookController(BookView bookView,BookService bookService)
+    private final OrderService orderService;
+    //private final LoginController loginController;
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public BookController(BookView bookView, BookService bookService, OrderService orderService)
     {
         this.bookService=bookService;
         this.bookView=bookView;
-
+        this.orderService=orderService;
+        //this.user=user;
         this.bookView.addSaveButtonListener(new SaveButtonListener());
         this.bookView.addDeleteButtonListener(new DeleteButtonListener());
         this.bookView.addLogOutButtonListener(new LogOutButtonListener());
@@ -35,10 +47,12 @@ public class BookController {
                 //aici verific si daca am destul stock
 
                 if (bookDTO.getStock() == 0) {
-                    bookView.addDisplayAlertMessage("Sell error", "Problem at selling the book", "There book is out of stock. Thank you for understanding!");
+                    bookView.addDisplayAlertMessage("Sell error", "Problem at selling the book", "The book is out of stock. Thank you for understanding!");
                 } else {
                     boolean sellSuccessful = bookService.sell(BookMapper.convertBookDTOToBook(bookDTO));
-                    if (sellSuccessful) {
+                    //User user= new UserBuilder().setId(1L).build();
+                    boolean orderSuccessful=orderService.makeOrder(BookMapper.convertBookDTOToBook(bookDTO),user);
+                    if (sellSuccessful &&orderSuccessful) {
                         bookDTO.setStock(bookDTO.getStock()-1);
                          bookView.addDisplayAlertMessage("Sell successful","Book sold","Book was successfully sold");
                         bookView.editObservableList(bookDTO);

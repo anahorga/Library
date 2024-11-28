@@ -49,6 +49,7 @@ public class UserRepositoryMySQL implements UserRepository {
 
        return new UserBuilder().setUsername(resultSet.getString("username"))
                 .setPassword(resultSet.getString("password"))
+               .setId(resultSet.getLong("id"))
                 .setRoles(rightsRolesRepository.findRolesForUser(resultSet.getLong("id")))
                 .build();
     }

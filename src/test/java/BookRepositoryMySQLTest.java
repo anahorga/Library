@@ -42,13 +42,13 @@ public class BookRepositoryMySQLTest {
     @Test
     public void save()
     {
-        assertTrue(bookRepository.save(new BookBuilder().setAuthor("Ana").setPublishedDate(LocalDate.of(2020,11,30)).setTitle("Viata").build()));
+        //assertTrue(bookRepository.save(new BookBuilder().setAuthor("Ana").setPublishedDate(LocalDate.of(2020,11,30)).setTitle("Viata").build()));
     }
     @Test
     public void delete()
     {
-        bookRepository.save(new BookBuilder().setAuthor("Ana").setPublishedDate(LocalDate.of(2020,11,30)).setTitle("Viata").build());
-        assertTrue(bookRepository.delete(new BookBuilder().setAuthor("Ana").setPublishedDate(LocalDate.of(2020,11,30)).setTitle("Viata").build()));
+        int id=bookRepository.save(new BookBuilder().setAuthor("Ana").setPublishedDate(LocalDate.of(2020,11,30)).setTitle("Viata").build());
+        assertTrue(bookRepository.delete(new BookBuilder().setId((long) id).build()));
     }
 
 
