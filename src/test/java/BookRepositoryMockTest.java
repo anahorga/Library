@@ -39,6 +39,6 @@ public class BookRepositoryMockTest {
     @Test
     public void save()
     {
-        assertTrue(bookRepository.save(new BookBuilder().setAuthor("Ana").setPublishedDate(LocalDate.of(2020,11,30)).setTitle("Viata").build()));
+        assertEquals(1,bookRepository.save(new BookBuilder().setAuthor("Ana").setPublishedDate(LocalDate.of(2020,11,30)).setTitle("Viata").build()));
     }
 }

@@ -13,6 +13,7 @@ public class LoginController {
 
     private final LoginView loginView;
     private final AuthenticationService authenticationService;
+    private User user;
 
 
     public LoginController(LoginView loginView, AuthenticationService authenticationService) {
@@ -31,22 +32,23 @@ public class LoginController {
             String password = loginView.getPassword();
 
             Notification<User> loginNotification = authenticationService.login(username, password);
-
+            user=loginNotification.getResult();
             if (loginNotification.hasErrors()){
                 loginView.setActionTargetText(loginNotification.getFormattedErrors());
             }else{
                 loginView.setActionTargetText("LogIn Successfull!");
-                EmployeeComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage());
+                EmployeeComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage()).getBookController().setUser(user);
                 EmployeeComponentFactory.getStage().setScene(EmployeeComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage())
                         .getBookView().getScene());
 
                 loginView.setActionTargetText("");
                 loginView.getPasswordField().setText("");
                 loginView.getUserTextField().setText("");
-
+                //System.out.println(loginNotification.getResult().getId());
             }
         }
     }
+
 
     private class RegisterButtonListener implements EventHandler<ActionEvent> {
 
