@@ -26,7 +26,7 @@ public class BookMapper {
                 .setId(bookDTO.getId()).build();
     }
 
-    public static List<BookDTO> covertBookListToBookDTOList(List<Book>books)
+    public static List<BookDTO> convertBookListToBookDTOList(List<Book>books)
     {
         return books.parallelStream().map(BookMapper::convertBookToBookDTO).collect(Collectors.toList());
     }

@@ -5,8 +5,14 @@ import repository.book.BookRepository;
 import repository.book.BookRepositoryCacheDecorator;
 import repository.book.BookRepositoryMySQL;
 import repository.book.Cache;
+import repository.security.RightsRolesRepository;
+import repository.security.RightsRolesRepositoryMySQL;
+import repository.user.UserRepository;
+import repository.user.UserRepositoryMySQL;
 import service.book.BookService;
 import service.book.BookServiceImpl;
+import service.user.AuthenticationService;
+import service.user.AuthenticationServiceImpl;
 
 import java.sql.Connection;
 import java.time.LocalDate;
@@ -63,6 +69,12 @@ public class Main {
 //        System.out.println(bookService.findAll());
 
 
+//        Connection connection= DatabaseConnectionFactory.getConnectionWrapper(false).getConnection();
+//        RightsRolesRepository rightsRolesRepository=new RightsRolesRepositoryMySQL(connection);
+//        UserRepository userRepository=new UserRepositoryMySQL(connection,rightsRolesRepository);
+//        AuthenticationService auth=new AuthenticationServiceImpl(userRepository,rightsRolesRepository);
+//
+//        auth.registerEmployee("alex@gmail.com","alex1234#");
 
     }
 }

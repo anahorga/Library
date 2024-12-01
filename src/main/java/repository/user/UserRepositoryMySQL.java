@@ -30,7 +30,9 @@ public class UserRepositoryMySQL implements UserRepository {
     public List<User> findAll() {
 
         List<User> users=new ArrayList<>();
-        String sql="Select * from user";
+        String sql="select user.id,username,password \n" +
+                "from user,user_role,role\n" +
+                "where user.id=user_role.user_id and user_role.role_id=role.id and role=\"employee\"";
         try{
             PreparedStatement preparedStatement=connection.prepareStatement(sql);
             ResultSet resultSet=preparedStatement.executeQuery();
