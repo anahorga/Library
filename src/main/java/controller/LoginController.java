@@ -2,8 +2,10 @@ package controller;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 //import launcher.EmployeeComponentFactory;
+import launcher.AdminComponentFactory;
 import launcher.EmployeeComponentFactory;
 import launcher.LoginComponentFactory;
+import model.Role;
 import model.User;
 import model.validation.Notification;
 import service.user.AuthenticationService;
@@ -32,15 +34,26 @@ public class LoginController {
             String password = loginView.getPassword();
 
             Notification<User> loginNotification = authenticationService.login(username, password);
-            user=loginNotification.getResult();
+
             if (loginNotification.hasErrors()){
                 loginView.setActionTargetText(loginNotification.getFormattedErrors());
             }else{
+                user=loginNotification.getResult();
+                Role role=user.getRoles().get(0);
+                if(role.getRole().equals("employee")) {
+                    EmployeeComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage()).getBookController().setUser(user);
+                    EmployeeComponentFactory.getStage().setScene(EmployeeComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage())
+                            .getBookView().getScene());
+                }
+                else
+                    if(role.getRole().equals("administrator"))
+                    {
+                       AdminComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(),LoginComponentFactory.getStage());
+                        AdminComponentFactory.getStage().setScene(AdminComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage())
+                                .getAdminView().getScene());
+                   }
+                    else System.out.println("de implementat customer view");
                 loginView.setActionTargetText("LogIn Successfull!");
-                EmployeeComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage()).getBookController().setUser(user);
-                EmployeeComponentFactory.getStage().setScene(EmployeeComponentFactory.getInstance(LoginComponentFactory.getComponentsForTests(), LoginComponentFactory.getStage())
-                        .getBookView().getScene());
-
                 loginView.setActionTargetText("");
                 loginView.getPasswordField().setText("");
                 loginView.getUserTextField().setText("");
