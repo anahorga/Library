@@ -1,5 +1,6 @@
 package repository.user;
 
+import model.Report;
 import model.User;
 import model.validation.Notification;
 
@@ -15,5 +16,9 @@ public interface UserRepository {
      void removeAll();
 
      boolean existsByUsername(String username);
+
+     int addEmployee(User user);
+
+     Notification<Report> generateReport(User user);
 
 }

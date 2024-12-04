@@ -1,5 +1,7 @@
 package repository.user;
+import model.Report;
 import model.User;
+import model.builder.ReportBuilder;
 import model.builder.UserBuilder;
 import model.validation.Notification;
 import repository.security.RightsRolesRepository;
@@ -144,6 +146,67 @@ public class UserRepositoryMySQL implements UserRepository {
             e.printStackTrace();
             return false;
         }
+    }
+
+    @Override
+    public int addEmployee(User user) {
+        try {
+            PreparedStatement insertUserStatement = connection
+                    .prepareStatement("INSERT INTO user values (null, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+            insertUserStatement.setString(1, user.getUsername());
+            insertUserStatement.setString(2, user.getPassword());
+            insertUserStatement.executeUpdate();
+
+            ResultSet rs = insertUserStatement.getGeneratedKeys();
+            rs.next();
+            long userId = rs.getLong(1);
+            user.setId(userId);
+
+            rightsRolesRepository.addRolesToUser(user, user.getRoles());
+
+            return (int) userId;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return -1;
+        }
+    }
+
+    @Override
+    public Notification<Report> generateReport(User user) {
+       String sql="SELECT sum(stock)as carti_vandute,user_id,username,sum(price) as pret_total\n" +
+               "FROM library.order,user\n" +
+               "where user_id=user.id \n" +
+               "and MONTH(order_date) = MONTH(CURDATE()) AND YEAR(order_date) = YEAR(CURDATE()) and user_id= ? \n" +
+               "group by user_id";
+       Notification<Report> notificationReport=new Notification<>();
+       try
+       {
+
+           PreparedStatement preparedStatement=connection.prepareStatement(sql);
+           preparedStatement.setLong(1,user.getId());
+           ResultSet resultSet=preparedStatement.executeQuery();
+           if(resultSet.next())
+           {
+               Report report = new ReportBuilder().setId(resultSet.getLong("user_id"))
+                       .setStock(resultSet.getInt("carti_vandute"))
+                       .setPrice(resultSet.getInt("pret_total"))
+                       .setUsername(resultSet.getString("username"))
+                       .build();
+               notificationReport.setResult(report);
+           }
+           else
+           {
+               notificationReport.addError("The employee does not have any orders history");
+                return notificationReport;
+           }
+       }
+       catch(SQLException e)
+       {
+           e.printStackTrace();
+           notificationReport.addError("Something is wrong with the database! Please try again.");
+
+       }
+        return notificationReport;
     }
 
 }

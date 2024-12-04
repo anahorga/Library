@@ -1,5 +1,6 @@
 package service.user;
 
+import model.Report;
 import model.Role;
 import model.User;
 import model.builder.UserBuilder;
@@ -12,6 +13,13 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.util.Collections;
 import java.util.List;
+
+import com.itextpdf.kernel.pdf.PdfDocument;
+import com.itextpdf.kernel.pdf.PdfWriter;
+import com.itextpdf.layout.Document;
+import com.itextpdf.layout.element.Paragraph;
+
+import java.io.File;
 
 import static database.Constants.Roles.EMPLOYEE;
 
@@ -27,7 +35,7 @@ public class UserServiceImpl implements UserService{
 
     //metoda folosita de admin pentru a adauga un nou angajat
     @Override
-    public Notification<Boolean> registerEmployee(String username, String password) {
+    public Notification<Integer> registerEmployee(String username, String password) {
         Role employeeRole = rightsRolesRepository.findRoleByTitle(EMPLOYEE);
 
         User user = new UserBuilder()
@@ -40,11 +48,11 @@ public class UserServiceImpl implements UserService{
         UserValidator userValidator = new UserValidator(user);
 
         boolean userValid = userValidator.validate();
-        Notification<Boolean> userRegisterNotification = new Notification<>();
+        Notification<Integer> userRegisterNotification = new Notification<>();
 
         if (!userValid ){
             userValidator.getErrors().forEach(userRegisterNotification::addError);
-            userRegisterNotification.setResult(Boolean.FALSE);
+            userRegisterNotification.setResult(-1);
         }
         else if (userRepository.existsByUsername(username))
         {
@@ -52,7 +60,7 @@ public class UserServiceImpl implements UserService{
         }
         else {
             user.setPassword(hashPassword(password));
-            userRegisterNotification.setResult(userRepository.save(user));
+            userRegisterNotification.setResult(userRepository.addEmployee(user));
         }
 
         return userRegisterNotification;
@@ -62,6 +70,32 @@ public class UserServiceImpl implements UserService{
     public List<User> findAll() {
         return userRepository.findAll();
     }
+
+    @Override
+    public Notification<Report> generateReport(User user) {
+        Notification<Report> report=userRepository.generateReport(user);
+        String dest = "report.pdf";
+        if(report.hasErrors())
+        {
+            return report;
+        }
+
+        try {
+                PdfWriter writer = new PdfWriter(new File(dest));
+                PdfDocument pdfDoc = new PdfDocument(writer);
+                Document document = new Document(pdfDoc);
+
+                document.add(new Paragraph(report.getResult().toString()));
+                document.close();
+
+                System.out.println("PDF generat cu succes la: " + dest);
+            } catch (Exception e) {
+                e.printStackTrace();
+                report.addError("Something is wrong with PDF generator");
+            }
+            return report;
+    }
+
 
     private String hashPassword(String password) {
         try {
