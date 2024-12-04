@@ -1,6 +1,7 @@
 package mapper;
 
 import model.User;
+import model.builder.UserBuilder;
 import view.model.UserDTO;
 import view.model.builder.UserDTOBuilder;
 
@@ -23,4 +24,7 @@ public class UserMapper {
     }
 
 
+    public static User convertUserDTOToUser(UserDTO userDTO) {
+        return new UserBuilder().setId(userDTO.getId()).build();
+    }
 }
