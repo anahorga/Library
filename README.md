@@ -3,18 +3,12 @@ This Java-based desktop application follows Layered Architecture and implements 
 
 Key Features:
 
--JavaFX for the user interface, with DTO used to prevent direct access to sensitive data.
-
--Layered Architecture for separation of concerns.
-
--CRUD Operations for database interaction.
-
--Security with SHA-256 hashing for password protection.
-
--Singleton Pattern for managing the dependency tree.
-
--Caching for improved performance.
-
--Bootstrap Script for automatic database table creation.
+- JavaFX for the user interface, with DTO used to prevent direct access to sensitive data.
+- Layered Architecture for separation of concerns.
+- CRUD Operations for database interaction.
+- Security with SHA-256 hashing for password protection.
+- Singleton Pattern for managing the dependency tree.
+- Caching for improved performance.
+- Bootstrap Script for automatic database table creation.
 
 Technologies: JavaFX, Java, SQL, SHA-256, Singleton, Caching, Bootstrap.
