@@ -1,4 +1,4 @@
-# Library
+# BookStore
 This Java-based desktop application follows Layered Architecture and implements key SOLID principles and OOP paradigms. Tailored specifically for library employees, the system facilitates efficient management of books, employees, and customers. It ensures that the staff can focus on their tasks while having the necessary tools for administrative operations.
 
 Key Features:
